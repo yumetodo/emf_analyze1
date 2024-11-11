@@ -1,4 +1,10 @@
-﻿#include <Windows.h>
+﻿/*=============================================================================
+  Copyright (C) 2024 yumetodo <yume-wikijp@live.jp>
+
+  Distributed under the Boost Software License, Version 1.0.
+  (See https://www.boost.org/LICENSE_1_0.txt)
+=============================================================================*/
+#include <Windows.h>
 #include <iostream>
 #include <memory>
 #include <optional>

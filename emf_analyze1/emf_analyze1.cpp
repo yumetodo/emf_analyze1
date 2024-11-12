@@ -9,9 +9,9 @@
 #include <memory>
 #include <optional>
 
-std::ostream& operator<<(std::ostream& os, const RECTL& rect)
+std::wostream& operator<<(std::wostream& os, const RECTL& rect)
 {
-    os << "[" << rect.left << ',' << rect.right << ':' << rect.top << ',' << rect.bottom << ']';
+    os << L"[" << rect.left << L',' << rect.right << L':' << rect.top << L',' << rect.bottom << L']';
     return os;
 }
 
@@ -70,28 +70,29 @@ std::optional<EmfPlusHeader> GetEmfPlusHeader(HENHMETAFILE meta, const ENHMETAHE
     return emfPlusHeader;
 }
 
-int main(int argc, char* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
     if (argc != 2) return 1;
-    const auto meta = ::GetEnhMetaFileA(argv[1]);
+    std::wcout.imbue(std::locale(""));
+
+    const auto meta = ::GetEnhMetaFileW(argv[1]);
     ENHMETAHEADER enmhHeader;
     ::GetEnhMetaFileHeader(meta, sizeof(ENHMETAHEADER), &enmhHeader);
     std::wstring description;
     description.resize(enmhHeader.nDescription);
     ::GetEnhMetaFileDescriptionW(meta, enmhHeader.nDescription, description.data());
-    std::cout
-        << "device units: " << enmhHeader.rclBounds << '\n'
-        << "Picture Frame: " << enmhHeader.rclFrame << '\n'
-        << "version: " << enmhHeader.nVersion << std::endl;
-    std::wcout.imbue(std::locale(""));
-    std::wcout << "description: " << description << std::endl;
+    std::wcout
+        << L"device units: " << enmhHeader.rclBounds << L'\n'
+        << L"Picture Frame: " << enmhHeader.rclFrame << L'\n'
+        << L"version: " << enmhHeader.nVersion << L'\n'
+        << L"description: " << description << std::endl;
     try {
         if (const auto plusHeader = GetEmfPlusHeader(meta, enmhHeader)) {
-            std::cout
-                << "EMF+ header::\n"
-                << "GraphicsVersion: " << plusHeader->Version.GraphicsVersion << '\n'
-                << "EmfPlusFlags: " << std::hex << plusHeader->EmfPlusFlags << '\n'
-                << "LogicalDpi: [" << plusHeader->LogicalDpiX << ',' << plusHeader->LogicalDpiY << ']' << std::endl;
+            std::wcout
+                << L"EMF+ header::\n"
+                << L"GraphicsVersion: " << plusHeader->Version.GraphicsVersion << L'\n'
+                << L"EmfPlusFlags: " << std::hex << plusHeader->EmfPlusFlags << L'\n'
+                << L"LogicalDpi: [" << plusHeader->LogicalDpiX << L',' << plusHeader->LogicalDpiY << L']' << std::endl;
         }
     }
     catch (const std::exception& e) {

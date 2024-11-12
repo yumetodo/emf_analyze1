@@ -17,7 +17,7 @@ std::ostream& operator<<(std::ostream& os, const RECTL& rect)
 
 // https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-emf/929b78e1-b848-44a5-9fac-327cae5c2ae5
 // https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-emfplus/36d74342-6931-44d5-8ded-d3874f6be5dc
-struct EmrCommentEMFPlus {
+struct alignas(4)  EmrCommentEMFPlus {
     DWORD Type;
     DWORD Size;
     DWORD DataSize;
@@ -49,6 +49,7 @@ struct alignas(4) EmfPlusHeader
     DWORD LogicalDpiX;
     DWORD LogicalDpiY;
 };
+static_assert(sizeof(EmfPlusHeader) == 28);
 
 std::optional<EmfPlusHeader> GetEmfPlusHeader(HENHMETAFILE meta, const ENHMETAHEADER& enmhHeader)
 {

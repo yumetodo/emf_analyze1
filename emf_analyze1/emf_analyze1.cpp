@@ -1,4 +1,4 @@
-﻿/*=============================================================================
+/*=============================================================================
   Copyright (C) 2024 yumetodo <yume-wikijp@live.jp>
 
   Distributed under the Boost Software License, Version 1.0.
@@ -58,14 +58,15 @@ std::optional<EmfPlusHeader> GetEmfPlusHeader(HENHMETAFILE meta, const ENHMETAHE
     if (!metaData) return std::nullopt;
     const size_t metaDataHeadOffset = enmhHeader.offDescription + sizeof(ENHMETAHEADER);
     if (enmhHeader.nBytes < metaDataHeadOffset) std::nullopt;
-
-    const auto metaDataHead = reinterpret_cast<const EmrCommentEMFPlus*>(metaData.get() + metaDataHeadOffset);
-    if (metaDataHead->Type != 0x46 || std::string_view{ metaDataHead->EMFPlusSignature, 4 } != "EMF+") std::nullopt;
+    EmrCommentEMFPlus metaDataHead{};
+    std::memcpy(&metaDataHead, metaData.get() + metaDataHeadOffset, sizeof(EmrCommentEMFPlus));
+    if (metaDataHead.Type != 0x46 || std::string_view{ metaDataHead.EMFPlusSignature, 4 } != "EMF+") std::nullopt;
     const size_t headerOffset = sizeof(EmrCommentEMFPlus);
     if (enmhHeader.nBytes < metaDataHeadOffset + headerOffset) return std::nullopt;
-    const auto pEmfPlusHeader = reinterpret_cast<const EmfPlusHeader*>(metaData.get() + metaDataHeadOffset + headerOffset);
-    if (pEmfPlusHeader->Header.Type != 0x4001 || pEmfPlusHeader->Header.Size != sizeof(EmfPlusHeader)) return std::nullopt;
-    return *pEmfPlusHeader;
+    EmfPlusHeader emfPlusHeader{};
+    std::memcpy(&emfPlusHeader, metaData.get() + metaDataHeadOffset + headerOffset, sizeof(EmfPlusHeader));
+    if (emfPlusHeader.Header.Type != 0x4001 || emfPlusHeader.Header.Size != sizeof(EmfPlusHeader)) return std::nullopt;
+    return emfPlusHeader;
 }
 
 int main(int argc, char* argv[])

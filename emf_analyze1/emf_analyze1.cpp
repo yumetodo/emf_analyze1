@@ -1,4 +1,4 @@
-/*=============================================================================
+﻿/*=============================================================================
   Copyright (C) 2024 yumetodo <yume-wikijp@live.jp>
 
   Distributed under the Boost Software License, Version 1.0.
@@ -51,6 +51,7 @@ struct alignas(4) EmfPlusHeader
 };
 static_assert(sizeof(EmfPlusHeader) == 28);
 
+namespace {
 std::optional<EmfPlusHeader> GetEmfPlusHeader(HENHMETAFILE meta, const ENHMETAHEADER& enmhHeader)
 {
     if (enmhHeader.nBytes < sizeof(ENHMETAHEADER) + sizeof(EmfPlusHeader)) return std::nullopt;
@@ -68,6 +69,7 @@ std::optional<EmfPlusHeader> GetEmfPlusHeader(HENHMETAFILE meta, const ENHMETAHE
     std::memcpy(&emfPlusHeader, metaData.get() + metaDataHeadOffset + headerOffset, sizeof(EmfPlusHeader));
     if (emfPlusHeader.Header.Type != 0x4001 || emfPlusHeader.Header.Size != sizeof(EmfPlusHeader)) return std::nullopt;
     return emfPlusHeader;
+}
 }
 
 int wmain(int argc, wchar_t* argv[])

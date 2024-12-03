@@ -23,7 +23,7 @@ exported from Inkscape.
 device units: [0,9259:0,2078]
 Picture Frame: [0,19599:0,4399]
 version: 65536
-description: Inkscape 1.3.2 (091e20e, 2023-11-25, custom) Img_Biz_Logo.emf
+description: Inkscape 1.3.2 (091e20e, 2023-11-25, custom) b.emf
 ```
 
 ### EMF+ file
